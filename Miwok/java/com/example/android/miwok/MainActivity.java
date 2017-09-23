@@ -16,10 +16,13 @@
 package com.example.android.miwok;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -62,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         TextView phrases = (TextView) findViewById(R.id.phrases);
         phrases.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(phrasesIntent);
             }
         });
+
     }
 }
 
