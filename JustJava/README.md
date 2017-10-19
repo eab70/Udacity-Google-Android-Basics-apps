@@ -1,1 +1,1 @@
-Android Basics: User Interface course app
+Android Basics: User Interface course - Just Java app.
