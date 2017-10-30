@@ -1,1 +1,1 @@
-Android Basics: Data Storage - Pets app thru lesson 3.15.
+Android Basics: Data Storage - Pets app thru lesson 3.
