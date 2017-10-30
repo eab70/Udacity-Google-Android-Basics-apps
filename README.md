@@ -1,2 +1,2 @@
 # Udacity-Google-Android-Basics-apps
-Apps created while taking the five Android Basics courses.
+Apps created as part of the five Android Basics courses.
