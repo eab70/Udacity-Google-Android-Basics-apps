@@ -25,35 +25,25 @@ public class PetProvider extends ContentProvider {
     // URI matcher code for the content URI for a single pet in the pets table
     private static final int PET_ID = 101;
 
-    /**
-     * UriMatcher object to match a content URI to a corresponding code.
-     * The input passed into the constructor represents the code to return for the root URI.
-     * It's common to use NO_MATCH as the input for this case.
-     */
+    // UriMatcher object to match a content URI to a corresponding code.
+    // The input passed into the constructor represents the code to return for the root URI.
+    // It's common to use NO_MATCH as the input for this case.
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-    // Static initializer. This is run the first time anything is called from this class.
+    // Static initializer run the first time anything is called from this class.
     static {
-        // The calls to addURI() go here, for all of the content URI patterns that the provider
-        // should recognize. All paths added to the UriMatcher have a corresponding code to return
-        // when a match is found.
-
         // The content URI of the form "content://com.example.android.pets/pets" will map to the
-        // integer code {@link #PETS}. This URI is used to provide access to MULTIPLE rows
+        // integer code #PETS. This URI is used to provide access to MULTIPLE rows
         // of the pets table.
         sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS, PETS);
 
         // The content URI of the form "content://com.example.android.pets/pets/#" will map to the
-        // integer code {@link #PET_ID}. This URI is used to provide access to ONE single row
-        // of the pets table.
-        //
-        // In this case, the "#" wildcard is used where "#" can be substituted for an integer.
-        // For example, "content://com.example.android.pets/pets/3" matches, but
-        // "content://com.example.android.pets/pets" (without a number at the end) doesn't match.
+        // integer code #PET_ID. This URI is used to provide access to ONE single row
+        // of the pets table. The "#" wildcard is used where "#" can be substituted for an integer.
         sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS + "/#", PET_ID);
     }
 
-    /** Database helper object */
+    // Database helper object
     private PetDbHelper mDbHelper;
 
     @Override
@@ -82,19 +72,13 @@ public class PetProvider extends ContentProvider {
                         null, null, sortOrder);
                 break;
             case PET_ID:
-                // For the PET_ID code, extract out the ID from the URI.
-                // For an example URI such as "content://com.example.android.pets/pets/3",
-                // the selection will be "_id=?" and the selection argument will be a
-                // String array containing the actual ID of 3 in this case.
-                //
-                // For every "?" in the selection, we need to have an element in the selection
+                // For the PET_ID code, extract out the ID from the URI. For every "?" in
+                // the selection, we need to have an element in the selection
                 // arguments that will fill in the "?". Since we have 1 question mark in the
                 // selection, we have 1 String in the selection arguments' String array.
                 selection = PetEntry._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
 
-                // This will perform a query on the pets table where the _id equals 3 to return a
-                // Cursor containing that row of the table.
                 cursor = database.query(PetEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
@@ -156,7 +140,7 @@ public class PetProvider extends ContentProvider {
             case PETS:
                 return updatePet(uri, contentValues, selection, selectionArgs);
             case PET_ID:
-                // For the PET_ID code, extract out the ID from the URI,
+                // For the PET_ID code, extract the ID from the URI,
                 // so we know which row to update. Selection will be "_id=?" and selection
                 // arguments will be a String array containing the actual ID.
                 selection = PetEntry._ID + "=?";
@@ -170,7 +154,8 @@ public class PetProvider extends ContentProvider {
     // Update pets in the database with the given content values. Apply the changes to the rows
     //specified in the selection and selection arguments. Return the number of rows that were successfully updated.
     private int updatePet(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        // If the COLUMN_PET_NAME key is present, check that the name value is not null.
+        // Check that COLUMN_PET_NAME, _PET_GENDER and _PET_WEIGHT have valid values:
+
         if (values.containsKey(PetEntry.COLUMN_PET_NAME)) {
             String name = values.getAsString(PetEntry.COLUMN_PET_NAME);
             if (name == null) {
@@ -178,7 +163,6 @@ public class PetProvider extends ContentProvider {
             }
         }
 
-        // If the COLUMN_PET_GENDER key is present, check that the gender value is valid.
         if (values.containsKey(PetEntry.COLUMN_PET_GENDER)) {
             Integer gender = values.getAsInteger(PetEntry.COLUMN_PET_GENDER);
             if (gender == null || !PetEntry.isValidGender(gender)) {
@@ -186,9 +170,7 @@ public class PetProvider extends ContentProvider {
             }
         }
 
-        // If the COLUMN_PET_WEIGHT key is present, check that the weight value is valid.
         if (values.containsKey(PetEntry.COLUMN_PET_WEIGHT)) {
-            // Check that the weight is greater than or equal to 0 kg
             Integer weight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
             if (weight != null && weight < 0) {
                 throw new IllegalArgumentException("Pet requires valid weight");
